@@ -41,6 +41,20 @@ produtos = [
 def home():
     return render_template("index.html", produtos=produtos)
 
+@app.route("/produto/<int:produto_id>")
+def produto_detalhe(produto_id):
+    produto_encontrado = None
+
+    for produto in produtos:
+        if produto["id"] == produto_id:
+            produto_encontrado = produto
+            break
+
+    if produto_encontrado is None:
+        return "Produto nao encontrado", 404
+
+    return render_template("produto_detalhe.html", produto=produto_encontrado)
+
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
     app.run(debug=True)

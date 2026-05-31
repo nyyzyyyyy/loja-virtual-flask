@@ -30,7 +30,7 @@
             <p>R$ {{ "%.2f"|format(produto.preco) }}</p>
             <p>{{ produto.descricao }}</p>
             <p>Estoque: {{ produto.estoque }}</p>
-            <button>Ver produto</button>
+  <a class="botao" href="{{ url_for('produto_detalhe', produto_id=produto.id) }}">Ver produto</a>
         </article>
     {% endfor %}
 </section>

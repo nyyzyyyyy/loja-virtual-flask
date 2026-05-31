@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ produto.nome }} - Loja Virtual</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Loja Virtual</h1>
+        <nav>
+            <a href="/">Início</a>
+            <a href="#">Produtos</a>
+            <a href="#">Carrinho</a>
+            <a href="#">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="produto-detalhe">
+            <h2>{{ produto.nome }}</h2>
+            <p><strong>Categoria:</strong> {{ produto.categoria }}</p>
+            <p><strong>Preco:</strong> R$ {{ "%.2f"|format(produto.preco) }}</p>
+            <p><strong>Descricao:</strong> {{ produto.descricao }}</p>
+            <p><strong>Estoque:</strong> {{ produto.estoque }}</p>
+
+            <a class="botao" href="/">Voltar para a loja</a>
+        </section>
+    </main>
+</body>
+</html>
