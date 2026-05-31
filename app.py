@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -28,19 +28,54 @@ produtos = [
         "estoque": 8,
     },
     {
-    "id": 4,
-    "nome": "Relogio Digital",
-    "categoria": "Acessorios",
-    "preco": 89.90,
-    "descricao": "Relogio digital resistente e moderno.",
-    "estoque": 15,
-},
+        "id": 4,
+        "nome": "Relogio Digital",
+        "categoria": "Acessorios",
+        "preco": 89.90,
+        "descricao": "Relogio digital resistente e moderno.",
+        "estoque": 15,
+    },
 ]
 
 @app.route("/")
 def home():
     return render_template("index.html", produtos=produtos)
+@app.route("/produtos")
+def catalogo():
+    busca = request.args.get("busca", "").lower()
+    categoria = request.args.get("categoria", "")
+    preco_maximo = request.args.get("preco_maximo", "")
 
+    produtos_filtrados = produtos
+
+    if busca:
+        produtos_filtrados = [
+            produto for produto in produtos_filtrados
+            if busca in produto["nome"].lower()
+        ]
+
+    if categoria:
+        produtos_filtrados = [
+            produto for produto in produtos_filtrados
+            if produto["categoria"] == categoria
+        ]
+
+    if preco_maximo:
+        produtos_filtrados = [
+            produto for produto in produtos_filtrados
+            if produto["preco"] <= float(preco_maximo)
+        ]
+
+    categorias = sorted(set(produto["categoria"] for produto in produtos))
+
+    return render_template(
+        "catalogo.html",
+        produtos=produtos_filtrados,
+        categorias=categorias,
+        busca=busca,
+        categoria_selecionada=categoria,
+        preco_maximo=preco_maximo,
+    )
 @app.route("/produto/<int:produto_id>")
 def produto_detalhe(produto_id):
     produto_encontrado = None

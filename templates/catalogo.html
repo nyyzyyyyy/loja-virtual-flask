@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Catalogo - Loja Virtual</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Loja Virtual</h1>
+        <nav>
+            <a href="/">Início</a>
+            <a href="/produtos">Produtos</a>
+            <a href="#">Carrinho</a>
+            <a href="#">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Catalogo de produtos</h2>
+            <p>Encontre os produtos disponiveis na loja.</p>
+        </section>
+
+        <form class="filtros" method="get" action="/produtos">
+            <input
+                type="text"
+                name="busca"
+                placeholder="Buscar produto"
+                value="{{ busca }}"
+            >
+
+            <select name="categoria">
+                <option value="">Todas as categorias</option>
+                {% for categoria in categorias %}
+                    <option
+                        value="{{ categoria }}"
+                        {% if categoria == categoria_selecionada %}selected{% endif %}
+                    >
+                        {{ categoria }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <input
+                type="number"
+                step="0.01"
+                name="preco_maximo"
+                placeholder="Preco maximo"
+                value="{{ preco_maximo }}"
+            >
+
+            <button type="submit">Filtrar</button>
+            <a class="botao-secundario" href="/produtos">Limpar</a>
+        </form>
+
+        <section class="produtos">
+            {% for produto in produtos %}
+                <article class="produto-card">
+                    <h3>{{ produto.nome }}</h3>
+                    <p>Categoria: {{ produto.categoria }}</p>
+                    <p>R$ {{ "%.2f"|format(produto.preco) }}</p>
+                    <p>{{ produto.descricao }}</p>
+                    <p>Estoque: {{ produto.estoque }}</p>
+                    <a class="botao" href="{{ url_for('produto_detalhe', produto_id=produto.id) }}">Ver produto</a>
+                </article>
+            {% else %}
+                <p>Nenhum produto encontrado.</p>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>
