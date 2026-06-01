@@ -69,6 +69,11 @@ def produto_detalhe(produto_id):
 
     return render_template("produto_detalhe.html", produto=produto)
 
+@app.route("/admin/produtos")
+def admin_produtos():
+    produtos = listar_produtos()
+    return render_template("admin_produtos.html", produtos=produtos)
+
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
     app.run(debug=True)

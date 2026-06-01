@@ -99,3 +99,26 @@ main {
     border-radius: 6px;
     text-decoration: none;
 }
+.admin-area {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    overflow-x: auto;
+}
+
+.tabela-admin {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela-admin th,
+.tabela-admin td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.tabela-admin th {
+    background-color: #f3f4f6;
+}

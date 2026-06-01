@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Produtos{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>Gerenciar produtos</h2>
+    <p>Visualize os produtos cadastrados na loja.</p>
+</section>
+
+<section class="admin-area">
+    <table class="tabela-admin">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Preço</th>
+                <th>Estoque</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+                <tr>
+                    <td>{{ produto.id }}</td>
+                    <td>{{ produto.nome }}</td>
+                    <td>{{ produto.categoria }}</td>
+                    <td>R$ {{ "%.2f"|format(produto.preco) }}</td>
+                    <td>{{ produto.estoque }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
