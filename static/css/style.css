@@ -122,3 +122,37 @@ main {
 .tabela-admin th {
     background-color: #f3f4f6;
 }
+.form-admin {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    max-width: 700px;
+}
+
+.form-admin label {
+    display: block;
+    margin-bottom: 14px;
+    font-weight: bold;
+}
+
+.form-admin input,
+.form-admin textarea {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 6px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.form-admin button {
+    background-color: #16a34a;
+    color: white;
+    border: 0;
+    padding: 10px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 8px;
+}

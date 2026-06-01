@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Produto - Admin{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>Novo produto</h2>
+    <p>Cadastre um novo item no catalogo da loja.</p>
+</section>
+
+<form class="form-admin" method="post">
+    <label>
+        Nome
+        <input type="text" name="nome" required>
+    </label>
+
+    <label>
+        Categoria
+        <input type="text" name="categoria" required>
+    </label>
+
+    <label>
+        Preço
+        <input type="number" step="0.01" name="preco" required>
+    </label>
+
+    <label>
+        Descrição
+        <textarea name="descricao" rows="4" required></textarea>
+    </label>
+
+    <label>
+        Estoque
+        <input type="number" name="estoque" required>
+    </label>
+
+    <button type="submit">Salvar produto</button>
+    <a class="botao-secundario" href="{{ url_for('admin_produtos') }}">Cancelar</a>
+</form>
+{% endblock %}

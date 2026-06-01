@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from database import conectar_banco
 
 app = Flask(__name__)
@@ -18,6 +18,20 @@ def buscar_produto_por_id(produto_id):
     ).fetchone()
     conexao.close()
     return produto
+
+
+def cadastrar_produto(nome, categoria, preco, descricao, estoque):
+    conexao = conectar_banco()
+    conexao.execute(
+        """
+        INSERT INTO produtos (nome, categoria, preco, descricao, estoque)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (nome, categoria, preco, descricao, estoque)
+    )
+    conexao.commit()
+    conexao.close()
+
 
 @app.route("/")
 def home():
@@ -73,6 +87,27 @@ def produto_detalhe(produto_id):
 def admin_produtos():
     produtos = listar_produtos()
     return render_template("admin_produtos.html", produtos=produtos)
+
+
+@app.route("/admin/produtos/novo", methods=["GET", "POST"])
+def admin_novo_produto():
+    if request.method == "POST":
+        nome = request.form["nome"]
+        categoria = request.form["categoria"]
+        preco = float(request.form["preco"])
+        descricao = request.form["descricao"]
+        estoque = int(request.form["estoque"])
+
+        cadastrar_produto(nome, categoria, preco, descricao, estoque)
+
+        return redirect(url_for("admin_produtos"))
+
+    return render_template("admin_novo_produto.html")
+
+
+if __name__ == "__main__":
+    print("Iniciando o servidor Flask...")
+    app.run(debug=True)
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
