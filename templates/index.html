@@ -1,28 +1,14 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Loja Virtual</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Loja Virtual</h1>
-        <nav>
-            <a href="/">Início</a>
-            <a href="/produtos">Produtos</a>
-            <a href="#">Carrinho</a>
-            <a href="#">Login</a>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <main>
-        <section class="hero">
-            <h2>Produtos em destaque</h2>
-            <p>Bem-vindo à nossa loja virtual.</p>
-        </section>
+{% block title %}Início - Loja Virtual{% endblock %}
 
-        <section class="produtos">
+{% block content %}
+<section class="hero">
+    <h2>Produtos em destaque</h2>
+    <p>Bem-vindo à nossa loja virtual.</p>
+</section>
+
+<section class="produtos">
     {% for produto in produtos %}
         <article class="produto-card">
             <h3>{{ produto.nome }}</h3>
@@ -30,7 +16,8 @@
             <p>R$ {{ "%.2f"|format(produto.preco) }}</p>
             <p>{{ produto.descricao }}</p>
             <p>Estoque: {{ produto.estoque }}</p>
-  <a class="botao" href="{{ url_for('produto_detalhe', produto_id=produto.id) }}">Ver produto</a>
+            <a class="botao" href="{{ url_for('produto_detalhe', produto_id=produto.id) }}">Ver produto</a>
         </article>
     {% endfor %}
 </section>
+{% endblock %}
