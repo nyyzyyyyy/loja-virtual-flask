@@ -1,44 +1,27 @@
 from flask import Flask, render_template, request
+from database import conectar_banco
 
 app = Flask(__name__)
 
-produtos = [
-    {
-        "id": 1,
-        "nome": "Camiseta Basica",
-        "categoria": "Roupas",
-        "preco": 59.90,
-        "descricao": "Camiseta confortavel para o dia a dia.",
-        "estoque": 20,
-    },
-    {
-        "id": 2,
-        "nome": "Tenis Esportivo",
-        "categoria": "Calcados",
-        "preco": 199.90,
-        "descricao": "Tenis ideal para caminhadas e atividades fisicas.",
-        "estoque": 12,
-    },
-    {
-        "id": 3,
-        "nome": "Mochila Urbana",
-        "categoria": "Acessorios",
-        "preco": 129.90,
-        "descricao": "Mochila resistente para trabalho, estudo e viagens curtas.",
-        "estoque": 8,
-    },
-    {
-        "id": 4,
-        "nome": "Relogio Digital",
-        "categoria": "Acessorios",
-        "preco": 89.90,
-        "descricao": "Relogio digital resistente e moderno.",
-        "estoque": 15,
-    },
-]
+def listar_produtos():
+    conexao = conectar_banco()
+    produtos = conexao.execute("SELECT * FROM produtos").fetchall()
+    conexao.close()
+    return produtos
+
+
+def buscar_produto_por_id(produto_id):
+    conexao = conectar_banco()
+    produto = conexao.execute(
+        "SELECT * FROM produtos WHERE id = ?",
+        (produto_id,)
+    ).fetchone()
+    conexao.close()
+    return produto
 
 @app.route("/")
 def home():
+    produtos = listar_produtos()
     return render_template("index.html", produtos=produtos)
 @app.route("/produtos")
 def catalogo():
@@ -46,7 +29,7 @@ def catalogo():
     categoria = request.args.get("categoria", "")
     preco_maximo = request.args.get("preco_maximo", "")
 
-    produtos_filtrados = produtos
+    produtos_filtrados = listar_produtos()
 
     if busca:
         produtos_filtrados = [
@@ -66,7 +49,8 @@ def catalogo():
             if produto["preco"] <= float(preco_maximo)
         ]
 
-    categorias = sorted(set(produto["categoria"] for produto in produtos))
+    todos_produtos = listar_produtos()
+    categorias = sorted(set(produto["categoria"] for produto in todos_produtos))
 
     return render_template(
         "catalogo.html",
@@ -78,17 +62,12 @@ def catalogo():
     )
 @app.route("/produto/<int:produto_id>")
 def produto_detalhe(produto_id):
-    produto_encontrado = None
+    produto = buscar_produto_por_id(produto_id)
 
-    for produto in produtos:
-        if produto["id"] == produto_id:
-            produto_encontrado = produto
-            break
-
-    if produto_encontrado is None:
+    if produto is None:
         return "Produto nao encontrado", 404
 
-    return render_template("produto_detalhe.html", produto=produto_encontrado)
+    return render_template("produto_detalhe.html", produto=produto)
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
