@@ -2,22 +2,51 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Loja Virtual{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Suiyuu{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>Loja Virtual</h1>
-        <nav>
-            <a href="/">Início</a>
-            <a href="/produtos">Produtos</a>
-            <a href="#">Carrinho</a>
-            <a href="#">Login</a>
-        </nav>
-    </header>
+    <aside class="sidebar">
+        <a class="brand" href="/">Suiyuu</a>
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+        <form class="sidebar-search" method="get" action="/produtos">
+            <input type="text" name="busca" placeholder="Buscar na loja">
+            <button type="submit">Buscar</button>
+        </form>
+
+        <nav class="side-nav">
+            <a href="/">Início</a>
+            <a href="/produtos">Todos os produtos</a>
+            <a href="/produtos#filtros">Filtros</a>
+            <a href="/admin/produtos">Admin</a>
+        </nav>
+
+        <div class="side-section">
+            <p>Categorias</p>
+            {% for categoria in categorias_menu %}
+                <a href="{{ url_for('catalogo', categoria=categoria) }}">{{ categoria }}</a>
+            {% endfor %}
+        </div>
+    </aside>
+
+    <div class="page-shell">
+        <header class="topbar">
+            <div>
+                <span class="eyebrow">Moda e acessórios</span>
+                <strong>Suiyuu collection</strong>
+            </div>
+
+            <nav>
+                <a href="/produtos">Catálogo</a>
+                <a href="#">Carrinho</a>
+                <a href="#">Login</a>
+            </nav>
+        </header>
+
+        <main class="content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 </body>
 </html>

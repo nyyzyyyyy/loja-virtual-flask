@@ -33,6 +33,13 @@ def cadastrar_produto(nome, categoria, preco, descricao, estoque):
     conexao.close()
 
 
+@app.context_processor
+def dados_globais():
+    produtos = listar_produtos()
+    categorias = sorted(set(produto["categoria"] for produto in produtos))
+    return {"categorias_menu": categorias}
+
+
 @app.route("/")
 def home():
     produtos = listar_produtos()

@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Catálogo - Loja Virtual{% endblock %}
+{% block title %}Catálogo - Suiyuu{% endblock %}
 
 {% block content %}
+
 <section class="hero">
     <h2>Catalogo de produtos</h2>
     <p>Encontre os produtos disponiveis na loja.</p>
 </section>
 
-<form class="filtros" method="get" action="/produtos">
+<form id="filtros" class="filtros" method="get" action="/produtos">
     <input
         type="text"
         name="busca"
