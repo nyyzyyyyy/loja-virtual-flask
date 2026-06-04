@@ -3,21 +3,31 @@
 {% block title %}Início - Suiyuu{% endblock %}
 
 {% block content %}
-
 <section class="hero">
     <h2>Produtos em destaque</h2>
-    <p>Bem-vindo à nossa loja virtual.</p>
+    <p>Conheça os itens selecionados da Suiyuu.</p>
 </section>
 
-<section class="produtos">
+<section class="vitrine-destaque">
     {% for produto in produtos %}
-        <article class="produto-card">
-            <h3>{{ produto.nome }}</h3>
-            <p>Categoria: {{ produto.categoria }}</p>
-            <p>R$ {{ "%.2f"|format(produto.preco) }}</p>
-            <p>{{ produto.descricao }}</p>
-            <p>Estoque: {{ produto.estoque }}</p>
-            <a class="botao" href="{{ url_for('produto_detalhe', produto_id=produto.id) }}">Ver produto</a>
+        <article class="destaque-card {% if loop.first %}ativo{% endif %}">
+            {% if produto.imagem %}
+                <img
+                    src="{{ url_for('static', filename='img/produtos/' ~ produto.imagem) }}"
+                    alt="{{ produto.nome }}"
+                >
+            {% else %}
+                <div class="produto-sem-imagem">Suiyuu</div>
+            {% endif %}
+
+            <div>
+                <span>{{ produto.categoria }}</span>
+                <h3>{{ produto.nome }}</h3>
+                <p>{{ produto.descricao }}</p>
+                <p>Estoque: {{ produto.estoque }}</p>
+                <strong>R$ {{ "%.2f"|format(produto.preco) }}</strong>
+                <a class="botao" href="{{ url_for('produto_detalhe', produto_id=produto.id) }}">Ver produto</a>
+            </div>
         </article>
     {% endfor %}
 </section>

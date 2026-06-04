@@ -5,6 +5,13 @@
 {% block content %}
 
 <section class="produto-detalhe">
+    {% if produto.imagem %}
+    <img
+        class="produto-imagem-detalhe"
+        src="{{ url_for('static', filename='img/produtos/' ~ produto.imagem) }}"
+        alt="{{ produto.nome }}"
+    >
+    {% endif %}
     <h2>{{ produto.nome }}</h2>
     <p><strong>Categoria:</strong> {{ produto.categoria }}</p>
     <p><strong>Preco:</strong> R$ {{ "%.2f"|format(produto.preco) }}</p>

@@ -6,6 +6,23 @@
     <title>{% block title %}Suiyuu{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const cards = document.querySelectorAll(".destaque-card");
+        let destaqueAtual = 0;
+
+        if (cards.length > 1) {
+            setInterval(function () {
+                cards[destaqueAtual].classList.remove("ativo");
+
+                destaqueAtual = (destaqueAtual + 1) % cards.length;
+
+                cards[destaqueAtual].classList.add("ativo");
+            }, 4000);
+        }
+    });
+</script>
+
 <body>
     <aside class="sidebar">
         <a class="brand" href="/">Suiyuu</a>
@@ -48,5 +65,22 @@
             {% block content %}{% endblock %}
         </main>
     </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cards = document.querySelectorAll(".destaque-card");
+            let destaqueAtual = 0;
+
+            if (cards.length > 1) {
+                setInterval(function () {
+                    cards[destaqueAtual].classList.remove("ativo");
+                    destaqueAtual = (destaqueAtual + 1) % cards.length;
+                    cards[destaqueAtual].classList.add("ativo");
+                }, 4000);
+            }
+        });
+    </script>
 </body>
 </html>

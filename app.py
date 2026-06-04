@@ -20,14 +20,14 @@ def buscar_produto_por_id(produto_id):
     return produto
 
 
-def cadastrar_produto(nome, categoria, preco, descricao, estoque):
+def cadastrar_produto(nome, categoria, preco, descricao, estoque, imagem):
     conexao = conectar_banco()
     conexao.execute(
         """
-        INSERT INTO produtos (nome, categoria, preco, descricao, estoque)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO produtos (nome, categoria, preco, descricao, estoque, imagem)
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
-        (nome, categoria, preco, descricao, estoque)
+        (nome, categoria, preco, descricao, estoque, imagem)
     )
     conexao.commit()
     conexao.close()
@@ -104,8 +104,9 @@ def admin_novo_produto():
         preco = float(request.form["preco"])
         descricao = request.form["descricao"]
         estoque = int(request.form["estoque"])
+        imagem = request.form["imagem"]
 
-        cadastrar_produto(nome, categoria, preco, descricao, estoque)
+        cadastrar_produto(nome, categoria, preco, descricao, estoque, imagem)
 
         return redirect(url_for("admin_produtos"))
 

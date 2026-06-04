@@ -3,10 +3,9 @@
 {% block title %}Catálogo - Suiyuu{% endblock %}
 
 {% block content %}
-
 <section class="hero">
-    <h2>Catalogo de produtos</h2>
-    <p>Encontre os produtos disponiveis na loja.</p>
+    <h2>Catálogo de produtos</h2>
+    <p>Explore roupas, acessórios e itens selecionados da Suiyuu.</p>
 </section>
 
 <form id="filtros" class="filtros" method="get" action="/produtos">
@@ -33,7 +32,7 @@
         type="number"
         step="0.01"
         name="preco_maximo"
-        placeholder="Preco maximo"
+        placeholder="Preço máximo"
         value="{{ preco_maximo }}"
     >
 
@@ -44,11 +43,21 @@
 <section class="produtos">
     {% for produto in produtos %}
         <article class="produto-card">
+            {% if produto.imagem %}
+                <img
+                    class="produto-imagem"
+                    src="{{ url_for('static', filename='img/produtos/' ~ produto.imagem) }}"
+                    alt="{{ produto.nome }}"
+                >
+            {% else %}
+                <div class="produto-sem-imagem">Suiyuu</div>
+            {% endif %}
+
             <h3>{{ produto.nome }}</h3>
             <p>Categoria: {{ produto.categoria }}</p>
-            <p>R$ {{ "%.2f"|format(produto.preco) }}</p>
             <p>{{ produto.descricao }}</p>
             <p>Estoque: {{ produto.estoque }}</p>
+            <strong>R$ {{ "%.2f"|format(produto.preco) }}</strong>
             <a class="botao" href="{{ url_for('produto_detalhe', produto_id=produto.id) }}">Ver produto</a>
         </article>
     {% else %}
