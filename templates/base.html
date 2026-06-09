@@ -37,12 +37,13 @@
             <a href="/produtos">Todos os produtos</a>
             <a href="/produtos#filtros">Filtros</a>
             <a href="/admin/produtos">Admin</a>
+            <a href="/admin/categorias">Categorias</a>
         </nav>
 
         <div class="side-section">
             <p>Categorias</p>
             {% for categoria in categorias_menu %}
-                <a href="{{ url_for('catalogo', categoria=categoria) }}">{{ categoria }}</a>
+                <a href="{{ url_for('catalogo', categoria=categoria.nome) }}">{{ categoria.nome }}</a>
             {% endfor %}
         </div>
     </aside>

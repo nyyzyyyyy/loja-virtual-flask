@@ -35,10 +35,11 @@ def cadastrar_produto(nome, categoria, preco, descricao, estoque, imagem):
 
 @app.context_processor
 def dados_globais():
-    produtos = listar_produtos()
-    categorias = sorted(set(produto["categoria"] for produto in produtos))
+    try:
+        categorias = listar_categorias()
+    except Exception:
+        categorias = []
     return {"categorias_menu": categorias}
-
 
 @app.route("/")
 def home():
@@ -156,11 +157,38 @@ def excluir_produto(produto_id):
     conexao.commit()
     conexao.close()
 
+def listar_categorias():
+    conexao = conectar_banco()
+    categorias = conexao.execute(
+        "SELECT * FROM categorias ORDER BY nome"
+    ).fetchall()
+    conexao.close()
+    return categorias
+
+
+def cadastrar_categoria(nome):
+    conexao = conectar_banco()
+    conexao.execute(
+        "INSERT INTO categorias (nome) VALUES (?)",
+        (nome,)
+    )
+    conexao.commit()
+    conexao.close()
+
 @app.route("/admin/produtos/<int:produto_id>/excluir", methods=["POST"])
 def admin_excluir_produto(produto_id):
     excluir_produto(produto_id)
     return redirect(url_for("admin_produtos"))
 
+@app.route("/admin/categorias", methods=["GET", "POST"])
+def admin_categorias():
+    if request.method == "POST":
+        nome = request.form["nome"]
+        cadastrar_categoria(nome)
+        return redirect(url_for("admin_categorias"))
+
+    categorias = listar_categorias()
+    return render_template("admin_categorias.html", categorias=categorias)
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")

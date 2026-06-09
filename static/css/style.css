@@ -484,3 +484,6 @@ a {
 .botao-perigo:hover {
     background: #7f1d1d;
 }
+.categoria-form {
+    margin-bottom: 18px;
+}

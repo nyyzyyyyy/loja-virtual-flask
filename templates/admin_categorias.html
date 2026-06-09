@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Categorias | Suiyuu{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>Categorias</h2>
+    <p>Organize os grupos de produtos exibidos na loja.</p>
+</section>
+
+<section class="admin-toolbar">
+    <div>
+        <h3>Categorias cadastradas</h3>
+        <p>{{ categorias|length }} categorias encontradas</p>
+    </div>
+</section>
+
+<form class="form-admin categoria-form" method="post">
+    <label>
+        Nome da categoria
+        <input type="text" name="nome" required>
+    </label>
+
+    <button type="submit">Cadastrar categoria</button>
+</form>
+
+<section class="admin-area">
+    <table class="tabela-admin">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for categoria in categorias %}
+                <tr>
+                    <td>{{ categoria.id }}</td>
+                    <td>{{ categoria.nome }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">Nenhuma categoria cadastrada.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
