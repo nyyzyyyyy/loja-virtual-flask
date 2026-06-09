@@ -112,6 +112,39 @@ def admin_novo_produto():
 
     return render_template("admin_novo_produto.html")
 
+@app.route("/admin/produtos/<int:produto_id>/editar", methods=["GET", "POST"])
+def admin_editar_produto(produto_id):
+    produto = buscar_produto_por_id(produto_id)
+
+    if produto is None:
+        return "Produto nao encontrado", 404
+
+    if request.method == "POST":
+        nome = request.form["nome"]
+        categoria = request.form["categoria"]
+        preco = float(request.form["preco"])
+        descricao = request.form["descricao"]
+        estoque = int(request.form["estoque"])
+        imagem = request.form["imagem"]
+
+        atualizar_produto(produto_id, nome, categoria, preco, descricao, estoque, imagem)
+
+        return redirect(url_for("admin_produtos"))
+
+    return render_template("admin_editar_produto.html", produto=produto)
+
+def atualizar_produto(produto_id, nome, categoria, preco, descricao, estoque, imagem):
+    conexao = conectar_banco()
+    conexao.execute(
+        """
+        UPDATE produtos
+        SET nome = ?, categoria = ?, preco = ?, descricao = ?, estoque = ?, imagem = ?
+        WHERE id = ?
+        """,
+        (nome, categoria, preco, descricao, estoque, imagem, produto_id)
+    )
+    conexao.commit()
+    conexao.close()
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
