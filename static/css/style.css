@@ -359,3 +359,104 @@ a {
         height: 300px;
     }
 }
+
+.form-produto {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+    max-width: 980px;
+}
+
+.form-preview {
+    background: #f3f4f6;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    height: fit-content;
+}
+
+.form-preview img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 6px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.campo-completo {
+    grid-column: 1 / -1;
+}
+
+.form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+}
+
+@media (max-width: 800px) {
+    .form-produto {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-actions button,
+    .form-actions a {
+        text-align: center;
+    }
+}
+.admin-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+}
+
+.admin-toolbar h3 {
+    margin: 0 0 4px;
+}
+
+.admin-toolbar p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.admin-area {
+    overflow-x: auto;
+}
+
+.tabela-admin {
+    min-width: 760px;
+}
+
+.tabela-admin th,
+.tabela-admin td {
+    vertical-align: middle;
+}
+
+.tabela-admin td:last-child,
+.tabela-admin th:last-child {
+    text-align: right;
+}

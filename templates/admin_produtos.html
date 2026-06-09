@@ -1,40 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Admin - Produtos{% endblock %}
+{% block title %}Admin - Produtos | Suiyuu{% endblock %}
 
 {% block content %}
-
-<th>Ações</th>
-<thead>
-    <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Categoria</th>
-        <th>Preço</th>
-        <th>Estoque</th>
-        <th>Ações</th>
-    </tr>
-</thead>
-<tbody>
-    {% for produto in produtos %}
-        <tr>
-            <td>{{ produto.id }}</td>
-            <td>{{ produto.nome }}</td>
-            <td>{{ produto.categoria }}</td>
-            <td>R$ {{ "%.2f"|format(produto.preco) }}</td>
-            <td>{{ produto.estoque }}</td>
-            <td>
-                <a class="botao-secundario" href="{{ url_for('admin_editar_produto', produto_id=produto.id) }}">Editar</a>
-            </td>
-        </tr>
-    {% endfor %}
-</tbody>
-</table>
+<section class="hero">
+    <h2>Gerenciar produtos</h2>
+    <p>Cadastre, edite e acompanhe o estoque dos produtos da Suiyuu.</p>
 </section>
 
-<p>
+<section class="admin-toolbar">
+    <div>
+        <h3>Produtos cadastrados</h3>
+        <p>{{ produtos|length }} itens encontrados</p>
+    </div>
+
     <a class="botao" href="{{ url_for('admin_novo_produto') }}">Novo produto</a>
-</p>
+</section>
 
 <section class="admin-area">
     <table class="tabela-admin">
@@ -45,8 +26,10 @@
                 <th>Categoria</th>
                 <th>Preço</th>
                 <th>Estoque</th>
+                <th>Ações</th>
             </tr>
         </thead>
+
         <tbody>
             {% for produto in produtos %}
                 <tr>
@@ -55,6 +38,18 @@
                     <td>{{ produto.categoria }}</td>
                     <td>R$ {{ "%.2f"|format(produto.preco) }}</td>
                     <td>{{ produto.estoque }}</td>
+                    <td>
+                        <a
+                            class="botao-secundario"
+                            href="{{ url_for('admin_editar_produto', produto_id=produto.id) }}"
+                        >
+                            Editar
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">Nenhum produto cadastrado.</td>
                 </tr>
             {% endfor %}
         </tbody>
