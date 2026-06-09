@@ -30,6 +30,7 @@
             <tr>
                 <th>ID</th>
                 <th>Nome</th>
+                <th>Ações</th>
             </tr>
         </thead>
 
@@ -38,10 +39,28 @@
                 <tr>
                     <td>{{ categoria.id }}</td>
                     <td>{{ categoria.nome }}</td>
+                    <td>
+                        <div class="acoes-admin">
+                            <a
+                                class="botao-secundario"
+                                href="{{ url_for('admin_editar_categoria', categoria_id=categoria.id) }}"
+                            >
+                                Editar
+                            </a>
+
+                            <form
+                                method="post"
+                                action="{{ url_for('admin_excluir_categoria', categoria_id=categoria.id) }}"
+                                onsubmit="return confirm('Tem certeza que deseja excluir esta categoria?');"
+                            >
+                                <button class="botao-perigo" type="submit">Excluir</button>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="2">Nenhuma categoria cadastrada.</td>
+                    <td colspan="3">Nenhuma categoria cadastrada.</td>
                 </tr>
             {% endfor %}
         </tbody>

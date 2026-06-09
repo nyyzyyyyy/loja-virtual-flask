@@ -175,6 +175,35 @@ def cadastrar_categoria(nome):
     conexao.commit()
     conexao.close()
 
+def buscar_categoria_por_id(categoria_id):
+    conexao = conectar_banco()
+    categoria = conexao.execute(
+        "SELECT * FROM categorias WHERE id = ?",
+        (categoria_id,)
+    ).fetchone()
+    conexao.close()
+    return categoria
+
+
+def atualizar_categoria(categoria_id, nome):
+    conexao = conectar_banco()
+    conexao.execute(
+        "UPDATE categorias SET nome = ? WHERE id = ?",
+        (nome, categoria_id)
+    )
+    conexao.commit()
+    conexao.close()
+
+
+def excluir_categoria(categoria_id):
+    conexao = conectar_banco()
+    conexao.execute(
+        "DELETE FROM categorias WHERE id = ?",
+        (categoria_id,)
+    )
+    conexao.commit()
+    conexao.close()
+
 @app.route("/admin/produtos/<int:produto_id>/excluir", methods=["POST"])
 def admin_excluir_produto(produto_id):
     excluir_produto(produto_id)
@@ -189,6 +218,25 @@ def admin_categorias():
 
     categorias = listar_categorias()
     return render_template("admin_categorias.html", categorias=categorias)
+
+@app.route("/admin/categorias/<int:categoria_id>/editar", methods=["GET", "POST"])
+def admin_editar_categoria(categoria_id):
+    categoria = buscar_categoria_por_id(categoria_id)
+
+    if categoria is None:
+        return "Categoria nao encontrada", 404
+
+    if request.method == "POST":
+        nome = request.form["nome"]
+        atualizar_categoria(categoria_id, nome)
+        return redirect(url_for("admin_categorias"))
+
+    return render_template("admin_editar_categoria.html", categoria=categoria)
+
+@app.route("/admin/categorias/<int:categoria_id>/excluir", methods=["POST"])
+def admin_excluir_categoria(categoria_id):
+    excluir_categoria(categoria_id)
+    return redirect(url_for("admin_categorias"))
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
