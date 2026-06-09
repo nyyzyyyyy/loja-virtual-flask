@@ -460,3 +460,27 @@ a {
 .tabela-admin th:last-child {
     text-align: right;
 }
+.acoes-admin {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    align-items: center;
+}
+
+.acoes-admin form {
+    margin: 0;
+}
+
+.botao-perigo {
+    background: #b91c1c;
+    color: white;
+    border: 0;
+    padding: 11px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.botao-perigo:hover {
+    background: #7f1d1d;
+}

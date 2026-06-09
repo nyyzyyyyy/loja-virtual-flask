@@ -39,12 +39,22 @@
                     <td>R$ {{ "%.2f"|format(produto.preco) }}</td>
                     <td>{{ produto.estoque }}</td>
                     <td>
-                        <a
-                            class="botao-secundario"
-                            href="{{ url_for('admin_editar_produto', produto_id=produto.id) }}"
-                        >
-                            Editar
-                        </a>
+                        <div class="acoes-admin">
+                            <a
+                                class="botao-secundario"
+                                href="{{ url_for('admin_editar_produto', produto_id=produto.id) }}"
+                            >
+                                Editar
+                            </a>
+
+                            <form
+                                method="post"
+                                action="{{ url_for('admin_excluir_produto', produto_id=produto.id) }}"
+                                onsubmit="return confirm('Tem certeza que deseja excluir este produto?');"
+                            >
+                                <button class="botao-perigo" type="submit">Excluir</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             {% else %}

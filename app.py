@@ -146,9 +146,21 @@ def atualizar_produto(produto_id, nome, categoria, preco, descricao, estoque, im
     conexao.commit()
     conexao.close()
 
-if __name__ == "__main__":
-    print("Iniciando o servidor Flask...")
-    app.run(debug=True)
+
+def excluir_produto(produto_id):
+    conexao = conectar_banco()
+    conexao.execute(
+        "DELETE FROM produtos WHERE id = ?",
+        (produto_id,)
+    )
+    conexao.commit()
+    conexao.close()
+
+@app.route("/admin/produtos/<int:produto_id>/excluir", methods=["POST"])
+def admin_excluir_produto(produto_id):
+    excluir_produto(produto_id)
+    return redirect(url_for("admin_produtos"))
+
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
