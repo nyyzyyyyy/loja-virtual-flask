@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Minha Conta | Suiyuu{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>Minha conta</h2>
+    <p>Acompanhe seus dados e pedidos na Suiyuu.</p>
+</section>
+
+<section class="admin-area">
+    <h3>Dados do cliente</h3>
+
+    <p><strong>Nome:</strong> {{ usuario.nome }}</p>
+    <p><strong>E-mail:</strong> {{ usuario.email }}</p>
+    <p><strong>Tipo de conta:</strong> {{ usuario.tipo }}</p>
+</section>
+
+<section class="admin-area historico-area">
+    <h3>Histórico de pedidos</h3>
+    <p>Você ainda não possui pedidos cadastrados.</p>
+</section>
+{% endblock %}

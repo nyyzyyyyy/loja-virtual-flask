@@ -59,7 +59,7 @@
                 <a href="/produtos">Catálogo</a>
                 <a href="#">Carrinho</a>
                 {% if session.usuario_id %}
-                    <a href="#">Olá, {{ session.usuario_nome }}</a>
+                    <a href="{{ url_for('minha_conta') }}">Olá, {{ session.usuario_nome }}</a>
                     <a href="{{ url_for('logout') }}">Sair</a>
                 {% else %}
                     <a href="{{ url_for('login') }}">Login</a>

@@ -229,7 +229,16 @@ def buscar_usuario_por_email(email):
         (email,)
     ).fetchone()
     conexao.close()
-    return usuario    
+    return usuario 
+
+def buscar_usuario_por_id(usuario_id):
+    conexao = conectar_banco()
+    usuario = conexao.execute(
+        "SELECT * FROM usuarios WHERE id = ?",
+        (usuario_id,)
+    ).fetchone()
+    conexao.close()
+    return usuario
 
 @app.route("/admin/produtos/<int:produto_id>/excluir", methods=["POST"])
 def admin_excluir_produto(produto_id):
@@ -309,7 +318,14 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
+@app.route("/minha-conta")
+def minha_conta():
+    if "usuario_id" not in session:
+        return redirect(url_for("login"))
 
+    usuario = buscar_usuario_por_id(session["usuario_id"])
+
+    return render_template("minha_conta.html", usuario=usuario)
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
