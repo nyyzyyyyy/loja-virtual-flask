@@ -58,7 +58,13 @@
             <nav>
                 <a href="/produtos">Catálogo</a>
                 <a href="#">Carrinho</a>
-                <a href="#">Login</a>
+                {% if session.usuario_id %}
+                    <a href="#">Olá, {{ session.usuario_nome }}</a>
+                    <a href="{{ url_for('logout') }}">Sair</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                     <a href="{{ url_for('cadastro') }}">Cadastro</a>
+                {% endif %}
             </nav>
         </header>
 

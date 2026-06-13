@@ -487,3 +487,11 @@ a {
 .categoria-form {
     margin-bottom: 18px;
 }
+.mensagem-erro {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 0;
+}

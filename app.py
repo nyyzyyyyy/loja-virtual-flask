@@ -1,7 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from database import conectar_banco
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+
+app.secret_key = "chave-secreta-suiyuu"
 
 def listar_produtos():
     conexao = conectar_banco()
@@ -204,6 +207,30 @@ def excluir_categoria(categoria_id):
     conexao.commit()
     conexao.close()
 
+def cadastrar_usuario(nome, email, senha):
+    senha_hash = generate_password_hash(senha)
+
+    conexao = conectar_banco()
+    conexao.execute(
+        """
+        INSERT INTO usuarios (nome, email, senha)
+        VALUES (?, ?, ?)
+        """,
+        (nome, email, senha_hash)
+    )
+    conexao.commit()
+    conexao.close()
+
+
+def buscar_usuario_por_email(email):
+    conexao = conectar_banco()
+    usuario = conexao.execute(
+        "SELECT * FROM usuarios WHERE email = ?",
+        (email,)
+    ).fetchone()
+    conexao.close()
+    return usuario    
+
 @app.route("/admin/produtos/<int:produto_id>/excluir", methods=["POST"])
 def admin_excluir_produto(produto_id):
     excluir_produto(produto_id)
@@ -237,6 +264,52 @@ def admin_editar_categoria(categoria_id):
 def admin_excluir_categoria(categoria_id):
     excluir_categoria(categoria_id)
     return redirect(url_for("admin_categorias"))
+
+@app.route("/cadastro", methods=["GET", "POST"])
+def cadastro():
+    erro = None
+
+    if request.method == "POST":
+        nome = request.form["nome"]
+        email = request.form["email"]
+        senha = request.form["senha"]
+
+        usuario_existente = buscar_usuario_por_email(email)
+
+        if usuario_existente:
+            erro = "Este e-mail ja esta cadastrado."
+        else:
+            cadastrar_usuario(nome, email, senha)
+            return redirect(url_for("login"))
+
+    return render_template("cadastro.html", erro=erro)
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    erro = None
+
+    if request.method == "POST":
+        email = request.form["email"]
+        senha = request.form["senha"]
+
+        usuario = buscar_usuario_por_email(email)
+
+        if usuario and check_password_hash(usuario["senha"], senha):
+            session["usuario_id"] = usuario["id"]
+            session["usuario_nome"] = usuario["nome"]
+            session["usuario_tipo"] = usuario["tipo"]
+            return redirect(url_for("home"))
+
+        erro = "E-mail ou senha invalidos."
+
+    return render_template("login.html", erro=erro)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("home"))
+
+
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
