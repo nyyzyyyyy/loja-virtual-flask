@@ -96,12 +96,17 @@ def produto_detalhe(produto_id):
 
 @app.route("/admin/produtos")
 def admin_produtos():
+    if not usuario_admin_logado():
+        return redirect(url_for("login"))
     produtos = listar_produtos()
     return render_template("admin_produtos.html", produtos=produtos)
 
 
 @app.route("/admin/produtos/novo", methods=["GET", "POST"])
 def admin_novo_produto():
+    if not usuario_admin_logado():
+        return redirect(url_for("login"))
+
     if request.method == "POST":
         nome = request.form["nome"]
         categoria = request.form["categoria"]
@@ -118,6 +123,9 @@ def admin_novo_produto():
 
 @app.route("/admin/produtos/<int:produto_id>/editar", methods=["GET", "POST"])
 def admin_editar_produto(produto_id):
+    if not usuario_admin_logado():
+        return redirect(url_for("login"))
+
     produto = buscar_produto_por_id(produto_id)
 
     if produto is None:
@@ -240,13 +248,22 @@ def buscar_usuario_por_id(usuario_id):
     conexao.close()
     return usuario
 
+def usuario_admin_logado():
+    return session.get("usuario_tipo") == "admin"
+
 @app.route("/admin/produtos/<int:produto_id>/excluir", methods=["POST"])
 def admin_excluir_produto(produto_id):
+    if not usuario_admin_logado():
+        return redirect(url_for("login"))
     excluir_produto(produto_id)
     return redirect(url_for("admin_produtos"))
 
 @app.route("/admin/categorias", methods=["GET", "POST"])
+
 def admin_categorias():
+    if not usuario_admin_logado():
+        return redirect(url_for("login"))
+
     if request.method == "POST":
         nome = request.form["nome"]
         cadastrar_categoria(nome)
@@ -257,6 +274,9 @@ def admin_categorias():
 
 @app.route("/admin/categorias/<int:categoria_id>/editar", methods=["GET", "POST"])
 def admin_editar_categoria(categoria_id):
+    if not usuario_admin_logado():
+        return redirect(url_for("login"))
+
     categoria = buscar_categoria_por_id(categoria_id)
 
     if categoria is None:
@@ -271,6 +291,9 @@ def admin_editar_categoria(categoria_id):
 
 @app.route("/admin/categorias/<int:categoria_id>/excluir", methods=["POST"])
 def admin_excluir_categoria(categoria_id):
+    if not usuario_admin_logado():
+        return redirect(url_for("login"))
+
     excluir_categoria(categoria_id)
     return redirect(url_for("admin_categorias"))
 

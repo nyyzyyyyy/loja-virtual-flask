@@ -36,8 +36,10 @@
             <a href="/">Início</a>
             <a href="/produtos">Todos os produtos</a>
             <a href="/produtos#filtros">Filtros</a>
-            <a href="/admin/produtos">Admin</a>
+        {% if session.usuario_tipo == "admin" %}
+            <a href="/admin/produtos">Admin produtos</a>
             <a href="/admin/categorias">Categorias</a>
+        {% endif %}
         </nav>
 
         <div class="side-section">
