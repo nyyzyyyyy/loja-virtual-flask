@@ -24,7 +24,11 @@
 </script>
 
 <body>
-    <aside class="sidebar">
+    <button class="sidebar-toggle" type="button" aria-label="Abrir ou fechar menu">
+        ☰
+    </button>
+
+    <aside class="sidebar" id="sidebar">
         <a class="brand" href="/">Suiyuu</a>
 
         <form class="sidebar-search" method="get" action="/produtos">
@@ -33,14 +37,20 @@
         </form>
 
         <nav class="side-nav">
+            <p class="side-label">Loja</p>
             <a href="/">Início</a>
             <a href="/produtos">Todos os produtos</a>
             <a href="/produtos#filtros">Filtros</a>
-        {% if session.usuario_tipo == "admin" %}
-            <a href="/admin/produtos">Admin produtos</a>
-            <a href="/admin/categorias">Categorias</a>
-        {% endif %}
+            <a href="#">Carrinho</a>
         </nav>
+
+        {% if session.usuario_tipo == "admin" %}
+            <nav class="side-nav admin-nav">
+                <p class="side-label">Administração</p>
+                <a href="/admin/produtos">Produtos</a>
+                <a href="/admin/categorias">Categorias</a>
+            </nav>
+        {% endif %}
 
         <div class="side-section">
             <p>Categorias</p>
@@ -50,7 +60,7 @@
         </div>
     </aside>
 
-    <div class="page-shell">
+    <div class="page-shell" id="pageShell">
         <header class="topbar">
             <div>
                 <span class="eyebrow">Moda e acessórios</span>
@@ -89,6 +99,15 @@
                     cards[destaqueAtual].classList.add("ativo");
                 }, 4000);
             }
+
+            const botaoMenu = document.querySelector(".sidebar-toggle");
+            const sidebar = document.querySelector(".sidebar");
+            const pageShell = document.querySelector(".page-shell");
+
+            botaoMenu.addEventListener("click", function () {
+                sidebar.classList.toggle("sidebar-fechada");
+                pageShell.classList.toggle("page-expandida");
+            });
         });
     </script>
 </body>

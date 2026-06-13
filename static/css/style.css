@@ -245,11 +245,6 @@ a {
     margin-top: 6px;
 }
 
-@media (max-width: 900px) {
-    .sidebar {
-        position: static;
-        width: 100%;
-    }
 
     .page-shell {
         margin-left: 0;
@@ -270,7 +265,7 @@ a {
     .produtos {
         grid-template-columns: 1fr;
     }
-}
+
 .produto-imagem {
     width: 100%;
     aspect-ratio: 4 / 5;
@@ -497,4 +492,113 @@ a {
 }
 .historico-area {
     margin-top: 18px;
+}
+.sidebar-toggle {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 40;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--green);
+    color: var(--white);
+    font-size: 22px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+}
+
+.side-label {
+    margin: 0 0 6px;
+    color: #9ca3af;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.admin-nav {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid #2b2b2b;
+}
+
+.admin-nav a {
+    color: #d1fae5;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    width: 260px;
+    height: 100vh;
+    background: var(--black);
+    color: var(--white);
+    padding: 28px 22px;
+    overflow-y: auto;
+    transform: translateX(0);
+    transition: transform 0.25s ease;
+}
+
+.page-shell {
+    margin-left: 260px;
+    min-height: 100vh;
+    transition: margin-left 0.25s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.sidebar-fechada {
+    transform: translateX(-100%);
+}
+
+.page-expandida {
+    margin-left: 0;
+}
+
+.sidebar .brand {
+    margin-top: 42px;
+}
+
+@media (max-width: 900px) {
+    .sidebar {
+        width: 280px;
+        transform: translateX(-100%);
+    }
+
+    .sidebar:not(.sidebar-fechada) {
+        transform: translateX(0);
+    }
+
+    .page-shell,
+    .page-expandida {
+        margin-left: 0;
+    }
+
+    .topbar {
+        height: auto;
+        padding: 18px 18px 18px 72px;
+        align-items: flex-start;
+        gap: 14px;
+        flex-direction: column;
+    }
+
+    .content {
+        padding: 18px;
+    }
+
+    .produtos {
+        grid-template-columns: 1fr;
+    }
+
+    .destaque-card {
+        grid-template-columns: 1fr;
+    }
+
+    .destaque-card img {
+        height: 300px;
+    }
 }
