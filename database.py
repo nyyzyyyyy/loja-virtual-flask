@@ -63,5 +63,29 @@ def inicializar_banco():
     )
     """)
 
+
+    total_produtos = conexao.execute("SELECT COUNT(*) FROM produtos").fetchone()[0]
+
+    if total_produtos == 0:
+        conexao.execute("""
+        INSERT INTO produtos (nome, categoria, preco, descricao, estoque, imagem)
+        VALUES
+        ('Camiseta Basica', 'Roupas', 59.90, 'Camiseta confortavel para o dia a dia.', 20, 'camiseta.jpg'),
+        ('Tenis Esportivo', 'Calcados', 199.90, 'Tenis ideal para caminhadas e atividades fisicas.', 12, 'tenis.jpg'),
+        ('Mochila Urbana', 'Acessorios', 129.90, 'Mochila resistente para trabalho, estudo e viagens curtas.', 8, 'mochila.jpg'),
+        ('Relogio Digital', 'Acessorios', 89.90, 'Relogio digital resistente e moderno.', 15, 'relogio.jpg')
+        """)
+
+    categorias_iniciais = ["Roupas", "Calcados", "Acessorios", "Casa"]
+
+    for categoria in categorias_iniciais:
+        try:
+            conexao.execute(
+                "INSERT INTO categorias (nome) VALUES (?)",
+                (categoria,)
+            )
+        except Exception:
+            pass
+
     conexao.commit()
     conexao.close()
