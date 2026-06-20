@@ -589,6 +589,23 @@ def admin_atualizar_status_pedido(pedido_id):
 
     return redirect(url_for("admin_pedidos"))
 
+@app.route("/promover-admin/<email>/<chave>")
+def promover_admin(email, chave):
+    chave_admin = os.environ.get("ADMIN_SETUP_KEY", "")
+
+    if not chave_admin or chave != chave_admin:
+        return "Acesso negado", 403
+
+    conexao = conectar_banco()
+    conexao.execute(
+        "UPDATE usuarios SET tipo = 'admin' WHERE email = ?",
+        (email,)
+    )
+    conexao.commit()
+    conexao.close()
+
+    return "Usuario promovido para admin com sucesso."
+
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
     app.run(debug=True)
