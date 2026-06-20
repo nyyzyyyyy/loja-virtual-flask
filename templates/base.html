@@ -6,22 +6,6 @@
     <title>{% block title %}Suiyuu{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const cards = document.querySelectorAll(".destaque-card");
-        let destaqueAtual = 0;
-
-        if (cards.length > 1) {
-            setInterval(function () {
-                cards[destaqueAtual].classList.remove("ativo");
-
-                destaqueAtual = (destaqueAtual + 1) % cards.length;
-
-                cards[destaqueAtual].classList.add("ativo");
-            }, 4000);
-        }
-    });
-</script>
 
 <body>
     <button class="sidebar-toggle" type="button" aria-label="Abrir ou fechar menu">
@@ -85,31 +69,45 @@
             {% block content %}{% endblock %}
         </main>
     </div>
-        </main>
-    </div>
-
+    
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const cards = document.querySelectorAll(".destaque-card");
-            let destaqueAtual = 0;
+    document.addEventListener("DOMContentLoaded", function () {
+        const cards = document.querySelectorAll(".destaque-card");
+        let destaqueAtual = 0;
 
-            if (cards.length > 1) {
-                setInterval(function () {
-                    cards[destaqueAtual].classList.remove("ativo");
-                    destaqueAtual = (destaqueAtual + 1) % cards.length;
-                    cards[destaqueAtual].classList.add("ativo");
-                }, 4000);
+        if (cards.length > 1) {
+            setInterval(function () {
+                cards[destaqueAtual].classList.remove("ativo");
+                destaqueAtual = (destaqueAtual + 1) % cards.length;
+                cards[destaqueAtual].classList.add("ativo");
+            }, 4000);
+        }
+
+        const botaoMenu = document.querySelector(".sidebar-toggle");
+        const sidebar = document.querySelector(".sidebar");
+        const pageShell = document.querySelector(".page-shell");
+
+        const menuFechado = localStorage.getItem("menuFechado") === "true";
+
+        if (menuFechado || window.innerWidth <= 900) {
+            sidebar.classList.add("sidebar-fechada");
+
+            if (window.innerWidth > 900) {
+                pageShell.classList.add("page-expandida");
             }
+        }
 
-            const botaoMenu = document.querySelector(".sidebar-toggle");
-            const sidebar = document.querySelector(".sidebar");
-            const pageShell = document.querySelector(".page-shell");
+        botaoMenu.addEventListener("click", function () {
+            sidebar.classList.toggle("sidebar-fechada");
 
-            botaoMenu.addEventListener("click", function () {
-                sidebar.classList.toggle("sidebar-fechada");
-                pageShell.classList.toggle("page-expandida");
-            });
+            const estaFechado = sidebar.classList.contains("sidebar-fechada");
+            localStorage.setItem("menuFechado", estaFechado);
+
+            if (window.innerWidth > 900) {
+                pageShell.classList.toggle("page-expandida", estaFechado);
+            }
         });
-    </script>
+    });
+</script>
 </body>
 </html>
