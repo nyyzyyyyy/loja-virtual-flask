@@ -168,6 +168,9 @@ def excluir_produto(produto_id):
     conexao.commit()
     conexao.close()
 
+def obter_carrinho():
+    return session.get("carrinho", {})
+
 def listar_categorias():
     conexao = conectar_banco()
     categorias = conexao.execute(
@@ -349,6 +352,46 @@ def minha_conta():
     usuario = buscar_usuario_por_id(session["usuario_id"])
 
     return render_template("minha_conta.html", usuario=usuario)
+
+@app.route("/carrinho/adicionar/<int:produto_id>", methods=["POST"])
+def adicionar_carrinho(produto_id):
+    produto = buscar_produto_por_id(produto_id)
+
+    if produto is None:
+        return "Produto nao encontrado", 404
+
+    carrinho = obter_carrinho()
+    produto_id_texto = str(produto_id)
+
+    if produto_id_texto in carrinho:
+        carrinho[produto_id_texto] += 1
+    else:
+        carrinho[produto_id_texto] = 1
+
+    session["carrinho"] = carrinho
+
+    return redirect(url_for("ver_carrinho"))
+
+@app.route("/carrinho")
+def ver_carrinho():
+    carrinho = obter_carrinho()
+    itens = []
+    total = 0
+
+    for produto_id, quantidade in carrinho.items():
+        produto = buscar_produto_por_id(int(produto_id))
+
+        if produto:
+            subtotal = produto["preco"] * quantidade
+            total += subtotal
+
+            itens.append({
+                "produto": produto,
+                "quantidade": quantidade,
+                "subtotal": subtotal,
+            })
+
+    return render_template("carrinho.html", itens=itens, total=total)
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")

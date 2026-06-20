@@ -602,3 +602,14 @@ a {
         height: 300px;
     }
 }
+.produto-card form,
+.produto-detalhe form {
+    margin-top: 10px;
+}
+
+.carrinho-total {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 18px;
+    font-size: 20px;
+}

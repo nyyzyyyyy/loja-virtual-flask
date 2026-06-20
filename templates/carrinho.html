@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Carrinho | Suiyuu{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>Carrinho</h2>
+    <p>Revise os produtos escolhidos antes de finalizar o pedido.</p>
+</section>
+
+{% if itens %}
+    <section class="admin-area">
+        <table class="tabela-admin">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in itens %}
+                    <tr>
+                        <td>{{ item.produto.nome }}</td>
+                        <td>{{ item.quantidade }}</td>
+                        <td>R$ {{ "%.2f"|format(item.subtotal) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="carrinho-total">
+            <strong>Total: R$ {{ "%.2f"|format(total) }}</strong>
+        </div>
+    </section>
+{% else %}
+    <section class="admin-area">
+        <p>Seu carrinho está vazio.</p>
+        <a class="botao" href="{{ url_for('catalogo') }}">Ver produtos</a>
+    </section>
+{% endif %}
+{% endblock %}

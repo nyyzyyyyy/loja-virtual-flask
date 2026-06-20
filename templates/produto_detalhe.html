@@ -19,5 +19,10 @@
     <p><strong>Estoque:</strong> {{ produto.estoque }}</p>
 
     <a class="botao" href="/">Voltar para a loja</a>
+
+    <form method="post" action="{{ url_for('adicionar_carrinho', produto_id=produto.id) }}">
+        <button class="botao" type="submit">Adicionar ao carrinho</button>
+    </form>
+
 </section>
 {% endblock %}

@@ -53,15 +53,21 @@
                 <div class="produto-sem-imagem">Suiyuu</div>
             {% endif %}
 
-            <h3>{{ produto.nome }}</h3>
-            <p>Categoria: {{ produto.categoria }}</p>
-            <p>{{ produto.descricao }}</p>
-            <p>Estoque: {{ produto.estoque }}</p>
-            <strong>R$ {{ "%.2f"|format(produto.preco) }}</strong>
+        <h3>{{ produto.nome }}</h3>
+        <p>Categoria: {{ produto.categoria }}</p>
+        <p>{{ produto.descricao }}</p>
+        <p>Estoque: {{ produto.estoque }}</p>
+        <strong>R$ {{ "%.2f"|format(produto.preco) }}</strong>
+
+        <div class="produto-acoes">
             <a class="botao" href="{{ url_for('produto_detalhe', produto_id=produto.id) }}">Ver produto</a>
-        </article>
-    {% else %}
-        <p>Nenhum produto encontrado.</p>
-    {% endfor %}
+
+            <form method="post" action="{{ url_for('adicionar_carrinho', produto_id=produto.id) }}">
+                <button class="botao" type="submit">Adicionar ao carrinho</button>
+            </form>
+        </div>
+    </article>
+        {% endfor %}
 </section>
+
 {% endblock %}
