@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Pedidos | Suiyuu{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>Pedidos</h2>
+    <p>Acompanhe e atualize os pedidos realizados na loja.</p>
+</section>
+
+<section class="admin-toolbar">
+    <div>
+        <h3>Pedidos realizados</h3>
+        <p>{{ pedidos|length }} pedidos encontrados</p>
+    </div>
+</section>
+
+<section class="admin-area">
+    <table class="tabela-admin">
+        <thead>
+            <tr>
+                <th>Pedido</th>
+                <th>Cliente</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Data</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for pedido in pedidos %}
+                <tr>
+                    <td>#{{ pedido.id }}</td>
+                    <td>
+                        {{ pedido.usuario_nome }}<br>
+                        <small>{{ pedido.usuario_email }}</small>
+                    </td>
+                    <td>{{ pedido.status }}</td>
+                    <td>R$ {{ "%.2f"|format(pedido.total) }}</td>
+                    <td>{{ pedido.criado_em }}</td>
+                    <td>
+                        <div class="acoes-admin">
+                            <a
+                                class="botao-secundario"
+                                href="{{ url_for('admin_pedido_detalhe', pedido_id=pedido.id) }}"
+                            >
+                                Itens
+                            </a>
+
+                            <form method="post" action="{{ url_for('admin_atualizar_status_pedido', pedido_id=pedido.id) }}">
+                                <select name="status">
+                                    <option value="Pendente" {% if pedido.status == "Pendente" %}selected{% endif %}>Pendente</option>
+                                    <option value="Pago" {% if pedido.status == "Pago" %}selected{% endif %}>Pago</option>
+                                    <option value="Enviado" {% if pedido.status == "Enviado" %}selected{% endif %}>Enviado</option>
+                                    <option value="Entregue" {% if pedido.status == "Entregue" %}selected{% endif %}>Entregue</option>
+                                </select>
+
+                                <button class="botao" type="submit">Atualizar</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">Nenhum pedido encontrado.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

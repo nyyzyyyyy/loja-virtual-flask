@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Itens do Pedido | Suiyuu{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>Itens do pedido #{{ pedido_id }}</h2>
+    <p>Produtos incluídos neste pedido.</p>
+</section>
+
+<section class="admin-area">
+    <table class="tabela-admin">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Preço unitário</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in itens %}
+                <tr>
+                    <td>{{ item.produto_nome }}</td>
+                    <td>{{ item.quantidade }}</td>
+                    <td>R$ {{ "%.2f"|format(item.preco_unitario) }}</td>
+                    <td>R$ {{ "%.2f"|format(item.subtotal) }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Nenhum item encontrado neste pedido.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p>
+        <a class="botao-secundario" href="{{ url_for('admin_pedidos') }}">Voltar para pedidos</a>
+    </p>
+</section>
+{% endblock %}

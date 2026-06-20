@@ -651,3 +651,15 @@ a {
 .carrinho-tabela form {
     margin: 0;
 }
+.acoes-admin select {
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--white);
+}
+
+.acoes-admin form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}

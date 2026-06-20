@@ -315,6 +315,44 @@ def listar_pedidos_usuario(usuario_id):
     conexao.close()
     return pedidos
 
+def listar_todos_pedidos():
+    conexao = conectar_banco()
+    pedidos = conexao.execute(
+        """
+        SELECT pedidos.*, usuarios.nome AS usuario_nome, usuarios.email AS usuario_email
+        FROM pedidos
+        JOIN usuarios ON usuarios.id = pedidos.usuario_id
+        ORDER BY pedidos.criado_em DESC
+        """
+    ).fetchall()
+    conexao.close()
+    return pedidos
+
+def listar_itens_pedido(pedido_id):
+    conexao = conectar_banco()
+    itens = conexao.execute(
+        """
+        SELECT
+            pedido_itens.*,
+            produtos.nome AS produto_nome
+        FROM pedido_itens
+        JOIN produtos ON produtos.id = pedido_itens.produto_id
+        WHERE pedido_itens.pedido_id = ?
+        """,
+        (pedido_id,)
+    ).fetchall()
+    conexao.close()
+    return itens
+
+def atualizar_status_pedido(pedido_id, status):
+    conexao = conectar_banco()
+    conexao.execute(
+        "UPDATE pedidos SET status = ? WHERE id = ?",
+        (status, pedido_id)
+    )
+    conexao.commit()
+    conexao.close()
+
 @app.route("/admin/produtos/<int:produto_id>/excluir", methods=["POST"])
 def admin_excluir_produto(produto_id):
     if not usuario_admin_logado():
@@ -517,6 +555,36 @@ def pedido_confirmado(pedido_id):
         return redirect(url_for("login"))
 
     return render_template("pedido_confirmado.html", pedido_id=pedido_id)
+
+@app.route("/admin/pedidos")
+def admin_pedidos():
+    if not usuario_admin_logado():
+        return redirect(url_for("login"))
+
+    pedidos = listar_todos_pedidos()
+    return render_template("admin_pedidos.html", pedidos=pedidos)
+
+@app.route("/admin/pedidos/<int:pedido_id>")
+def admin_pedido_detalhe(pedido_id):
+    if not usuario_admin_logado():
+        return redirect(url_for("login"))
+
+    itens = listar_itens_pedido(pedido_id)
+
+    return render_template("admin_pedido_detalhe.html", pedido_id=pedido_id, itens=itens)
+
+@app.route("/admin/pedidos/<int:pedido_id>/status", methods=["POST"])
+def admin_atualizar_status_pedido(pedido_id):
+    if not usuario_admin_logado():
+        return redirect(url_for("login"))
+
+    status = request.form["status"]
+    status_permitidos = ["Pendente", "Pago", "Enviado", "Entregue"]
+
+    if status in status_permitidos:
+        atualizar_status_pedido(pedido_id, status)
+
+    return redirect(url_for("admin_pedidos"))
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
