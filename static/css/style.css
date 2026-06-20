@@ -164,7 +164,11 @@ a {
     gap: 18px;
 }
 
-.produto-card,
+.produto-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
 .produto-detalhe,
 .admin-area,
 .form-admin {
@@ -175,8 +179,15 @@ a {
 }
 
 .produto-card h3 {
-    margin-top: 0;
+    margin: 0 0 8px;
 }
+
+.produto-card strong {
+    display: block;
+    margin-top: auto;
+    font-size: 18px;
+}
+
 
 .produto-card p {
     color: var(--muted);
@@ -268,7 +279,7 @@ a {
 
 .produto-imagem {
     width: 100%;
-    aspect-ratio: 4 / 5;
+    height: 260px;
     object-fit: cover;
     object-position: center;
     display: block;
@@ -276,6 +287,7 @@ a {
     margin-bottom: 14px;
     background: #f3f4f6;
 }
+
 
 .produto-imagem-detalhe {
     width: 100%;
