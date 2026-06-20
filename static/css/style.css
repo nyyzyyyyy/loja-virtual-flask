@@ -278,10 +278,6 @@ a {
         padding: 18px;
     }
 
-    .produtos {
-        grid-template-columns: 1fr;
-    }
-
 .produto-imagem {
     width: 100%;
     height: 240px;
@@ -706,4 +702,11 @@ a {
     display: flex;
     gap: 8px;
     align-items: center;
+}
+@media (min-width: 901px) {
+    .produtos {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(220px, 1fr));
+        gap: 22px;
+    }
 }
