@@ -10,12 +10,13 @@
 
 {% if itens %}
     <section class="admin-area">
-        <table class="tabela-admin">
+        <table class="tabela-admin carrinho-tabela">
             <thead>
                 <tr>
                     <th>Produto</th>
                     <th>Quantidade</th>
                     <th>Subtotal</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
 
@@ -23,8 +24,27 @@
                 {% for item in itens %}
                     <tr>
                         <td>{{ item.produto.nome }}</td>
-                        <td>{{ item.quantidade }}</td>
+                        <td>
+                            <div class="controle-quantidade">
+                                <form method="post" action="{{ url_for('atualizar_carrinho', produto_id=item.produto.id) }}">
+                                    <input type="hidden" name="acao" value="diminuir">
+                                    <button type="submit">-</button>
+                                </form>
+
+                                <span>{{ item.quantidade }}</span>
+
+                                <form method="post" action="{{ url_for('atualizar_carrinho', produto_id=item.produto.id) }}">
+                                    <input type="hidden" name="acao" value="aumentar">
+                                    <button type="submit">+</button>
+                                </form>
+                            </div>
+                        </td>
                         <td>R$ {{ "%.2f"|format(item.subtotal) }}</td>
+                        <td>
+                            <form method="post" action="{{ url_for('remover_carrinho', produto_id=item.produto.id) }}">
+                                <button class="botao-perigo" type="submit">Remover</button>
+                            </form>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -32,6 +52,16 @@
 
         <div class="carrinho-total">
             <strong>Total: R$ {{ "%.2f"|format(total) }}</strong>
+        </div>
+
+        <div class="carrinho-acoes">
+            <a class="botao" href="{{ url_for('catalogo') }}">Continuar comprando</a>
+
+            <form method="post" action="{{ url_for('limpar_carrinho') }}">
+                <button class="botao-secundario" type="submit">Esvaziar carrinho</button>
+            </form>
+
+            <a class="botao" href="#">Finalizar pedido</a>
         </div>
     </section>
 {% else %}

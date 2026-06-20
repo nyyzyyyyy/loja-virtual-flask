@@ -393,6 +393,42 @@ def ver_carrinho():
 
     return render_template("carrinho.html", itens=itens, total=total)
 
+@app.route("/carrinho/atualizar/<int:produto_id>", methods=["POST"])
+def atualizar_carrinho(produto_id):
+    acao = request.form["acao"]
+    carrinho = obter_carrinho()
+    produto_id_texto = str(produto_id)
+
+    if produto_id_texto in carrinho:
+        if acao == "aumentar":
+            carrinho[produto_id_texto] += 1
+        elif acao == "diminuir":
+            carrinho[produto_id_texto] -= 1
+
+            if carrinho[produto_id_texto] <= 0:
+                carrinho.pop(produto_id_texto)
+
+    session["carrinho"] = carrinho
+
+    return redirect(url_for("ver_carrinho"))
+
+@app.route("/carrinho/remover/<int:produto_id>", methods=["POST"])
+def remover_carrinho(produto_id):
+    carrinho = obter_carrinho()
+    produto_id_texto = str(produto_id)
+
+    if produto_id_texto in carrinho:
+        carrinho.pop(produto_id_texto)
+
+    session["carrinho"] = carrinho
+
+    return redirect(url_for("ver_carrinho"))
+
+@app.route("/carrinho/limpar", methods=["POST"])
+def limpar_carrinho():
+    session["carrinho"] = {}
+    return redirect(url_for("ver_carrinho"))
+
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
     app.run(debug=True)
