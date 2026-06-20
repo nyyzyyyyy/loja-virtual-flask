@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from database import conectar_banco
+from database import conectar_banco, inicializar_banco
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
 app.secret_key = "chave-secreta-suiyuu"
+
+inicializar_banco()
 
 def listar_produtos():
     conexao = conectar_banco()
