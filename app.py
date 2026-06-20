@@ -1,10 +1,11 @@
+import os
+
 from flask import Flask, render_template, request, redirect, url_for, session
 from database import conectar_banco, inicializar_banco
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-
-app.secret_key = "chave-secreta-suiyuu"
+app.secret_key = os.environ.get("SECRET_KEY", "chave-secreta-suiyuu")
 
 inicializar_banco()
 
@@ -591,3 +592,4 @@ def admin_atualizar_status_pedido(pedido_id):
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")
     app.run(debug=True)
+
