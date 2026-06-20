@@ -254,6 +254,67 @@ def buscar_usuario_por_id(usuario_id):
 def usuario_admin_logado():
     return session.get("usuario_tipo") == "admin"
 
+def criar_pedido(usuario_id, itens, total):
+    conexao = conectar_banco()
+
+    cursor = conexao.execute(
+        """
+        INSERT INTO pedidos (usuario_id, total, status)
+        VALUES (?, ?, ?)
+        """,
+        (usuario_id, total, "Pendente")
+    )
+
+    pedido_id = cursor.lastrowid
+
+    for item in itens:
+        produto = item["produto"]
+        quantidade = item["quantidade"]
+        subtotal = item["subtotal"]
+
+        conexao.execute(
+            """
+            INSERT INTO pedido_itens (
+                pedido_id, produto_id, quantidade, preco_unitario, subtotal
+            )
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                pedido_id,
+                produto["id"],
+                quantidade,
+                produto["preco"],
+                subtotal,
+            )
+        )
+
+        conexao.execute(
+            """
+            UPDATE produtos
+            SET estoque = estoque - ?
+            WHERE id = ?
+            """,
+            (quantidade, produto["id"])
+        )
+
+    conexao.commit()
+    conexao.close()
+
+    return pedido_id
+
+def listar_pedidos_usuario(usuario_id):
+    conexao = conectar_banco()
+    pedidos = conexao.execute(
+        """
+        SELECT * FROM pedidos
+        WHERE usuario_id = ?
+        ORDER BY criado_em DESC
+        """,
+        (usuario_id,)
+    ).fetchall()
+    conexao.close()
+    return pedidos
+
 @app.route("/admin/produtos/<int:produto_id>/excluir", methods=["POST"])
 def admin_excluir_produto(produto_id):
     if not usuario_admin_logado():
@@ -350,8 +411,9 @@ def minha_conta():
         return redirect(url_for("login"))
 
     usuario = buscar_usuario_por_id(session["usuario_id"])
+    pedidos = listar_pedidos_usuario(session["usuario_id"])
 
-    return render_template("minha_conta.html", usuario=usuario)
+    return render_template("minha_conta.html", usuario=usuario, pedidos=pedidos)
 
 @app.route("/carrinho/adicionar/<int:produto_id>", methods=["POST"])
 def adicionar_carrinho(produto_id):
@@ -374,23 +436,7 @@ def adicionar_carrinho(produto_id):
 
 @app.route("/carrinho")
 def ver_carrinho():
-    carrinho = obter_carrinho()
-    itens = []
-    total = 0
-
-    for produto_id, quantidade in carrinho.items():
-        produto = buscar_produto_por_id(int(produto_id))
-
-        if produto:
-            subtotal = produto["preco"] * quantidade
-            total += subtotal
-
-            itens.append({
-                "produto": produto,
-                "quantidade": quantidade,
-                "subtotal": subtotal,
-            })
-
+    itens, total = montar_itens_carrinho()
     return render_template("carrinho.html", itens=itens, total=total)
 
 @app.route("/carrinho/atualizar/<int:produto_id>", methods=["POST"])
@@ -428,6 +474,49 @@ def remover_carrinho(produto_id):
 def limpar_carrinho():
     session["carrinho"] = {}
     return redirect(url_for("ver_carrinho"))
+
+def montar_itens_carrinho():
+    carrinho = obter_carrinho()
+    itens = []
+    total = 0
+
+    for produto_id, quantidade in carrinho.items():
+        produto = buscar_produto_por_id(int(produto_id))
+
+        if produto:
+            subtotal = produto["preco"] * quantidade
+            total += subtotal
+
+            itens.append({
+                "produto": produto,
+                "quantidade": quantidade,
+                "subtotal": subtotal,
+            })
+
+    return itens, total
+
+@app.route("/pedido/finalizar", methods=["POST"])
+def finalizar_pedido():
+    if "usuario_id" not in session:
+        return redirect(url_for("login"))
+
+    itens, total = montar_itens_carrinho()
+
+    if not itens:
+        return redirect(url_for("ver_carrinho"))
+
+    pedido_id = criar_pedido(session["usuario_id"], itens, total)
+
+    session["carrinho"] = {}
+
+    return redirect(url_for("pedido_confirmado", pedido_id=pedido_id))
+
+@app.route("/pedido/<int:pedido_id>/confirmado")
+def pedido_confirmado(pedido_id):
+    if "usuario_id" not in session:
+        return redirect(url_for("login"))
+
+    return render_template("pedido_confirmado.html", pedido_id=pedido_id)
 
 if __name__ == "__main__":
     print("Iniciando o servidor Flask...")

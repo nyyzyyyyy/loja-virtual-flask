@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Pedido Confirmado | Suiyuu{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>Pedido confirmado</h2>
+    <p>Seu pedido foi criado com sucesso e está com status Pendente.</p>
+</section>
+
+<section class="admin-area">
+    <h3>Pedido #{{ pedido_id }}</h3>
+    <p>Obrigado por comprar na Suiyuu.</p>
+    <p>Você poderá acompanhar este pedido na área do cliente.</p>
+
+    <a class="botao" href="{{ url_for('minha_conta') }}">Ir para minha conta</a>
+</section>
+{% endblock %}

@@ -18,6 +18,31 @@
 
 <section class="admin-area historico-area">
     <h3>Histórico de pedidos</h3>
-    <p>Você ainda não possui pedidos cadastrados.</p>
+
+    {% if pedidos %}
+        <table class="tabela-admin">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for pedido in pedidos %}
+                    <tr>
+                        <td>#{{ pedido.id }}</td>
+                        <td>{{ pedido.status }}</td>
+                        <td>R$ {{ "%.2f"|format(pedido.total) }}</td>
+                        <td>{{ pedido.criado_em }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Você ainda não possui pedidos cadastrados.</p>
+    {% endif %}
 </section>
 {% endblock %}

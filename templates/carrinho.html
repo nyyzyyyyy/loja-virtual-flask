@@ -61,7 +61,9 @@
                 <button class="botao-secundario" type="submit">Esvaziar carrinho</button>
             </form>
 
-            <a class="botao" href="#">Finalizar pedido</a>
+            <form method="post" action="{{ url_for('finalizar_pedido') }}">
+                <button class="botao" type="submit">Finalizar pedido</button>
+            </form>
         </div>
     </section>
 {% else %}
